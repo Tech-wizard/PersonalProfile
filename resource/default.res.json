@@ -1,0 +1,30 @@
+{
+	"groups": [
+		{
+			"keys": "bg_jpg,bz_jpg,egret_icon_png,description_json",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"url": "assets/bg.jpg",
+			"type": "image",
+			"name": "bg_jpg"
+		},
+		{
+			"url": "assets/egret_icon.png",
+			"type": "image",
+			"name": "egret_icon_png"
+		},
+		{
+			"url": "config/description.json",
+			"type": "json",
+			"name": "description_json"
+		},
+		{
+			"url": "assets/bz.jpg",
+			"type": "image",
+			"name": "bz_jpg"
+		}
+	]
+}
