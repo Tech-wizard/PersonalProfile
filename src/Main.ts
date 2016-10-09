@@ -226,4 +226,43 @@ class Main extends egret.DisplayObjectContainer {
     }
 }
 
+class Page extends egret.DisplayObjectContainer {   //实现翻页用的page类
 
+    private _touchStatus:boolean = false;              //当前触摸状态，按下时，值为true
+    private _distance:egret.Point = new egret.Point(); //鼠标点击时，鼠标全局坐标与_bird的位置差
+
+    public mouseDown(evt:egret.TouchEvent) {
+             this._touchStatus = true;
+             this._distance.y = evt.stageY - this.y;
+             this.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+    }
+
+    private mouseMove(evt:egret.TouchEvent) {
+            if( this._touchStatus ) {
+                 this.y = evt.stageY - this._distance.y;
+                 if( this.y < -500 ){
+                     egret.Tween.get( this ).to( {x:0,y:-1136}, 400, egret.Ease.sineIn )
+                     .wait(300).to({x:0,y:0}, 100, egret.Ease.sineIn);
+                     this.parent.addChildAt(this,0);
+                     this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+                 }
+                 if( this.y > 500 ){
+                     egret.Tween.get( this ).to( {x:0,y:-1136}, 400, egret.Ease.sineIn )
+                     .wait(300).to({x:0,y:0}, 100, egret.Ease.sineIn);
+                     this.parent.addChildAt(this,0);
+                     this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+                 }
+            }            
+    }
+
+    public mouseUp(evt:egret.TouchEvent) {
+            this._touchStatus = false;
+            if( this.y >= -500 ) {
+                egret.Tween.get( this ).to( {x:0,y:0}, 300, egret.Ease.sineIn );
+            }
+            if( this.y <= 500 ) {
+                egret.Tween.get( this ).to( {x:0,y:0}, 300, egret.Ease.sineIn );
+            }
+            this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+    }
+}
