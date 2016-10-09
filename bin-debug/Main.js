@@ -108,7 +108,7 @@ var Main = (function (_super) {
         Page_1.touchEnabled = true;
         pagemove(Page_1); //页面具有滑动效果
         var sky_1 = this.createBitmapByName("bz_jpg");
-        this.addChild(sky_1);
+        Page_1.addChild(sky_1);
         sky_1.width = stageW;
         sky_1.height = stageH;
         var Page_2 = new Page();
@@ -116,17 +116,17 @@ var Main = (function (_super) {
         Page_2.touchEnabled = true;
         pagemove(Page_2); //页面具有滑动效果
         var sky_2 = this.createBitmapByName("light_jpg");
-        this.addChild(sky_2);
+        Page_2.addChild(sky_2);
         sky_2.width = stageW;
         sky_2.height = stageH;
         var Page_3 = new Page();
         this.addChild(Page_3);
         Page_3.touchEnabled = true;
         pagemove(Page_3); //页面具有滑动效果
-        var sky_1 = this.createBitmapByName("cloud_jpg");
-        this.addChild(sky_1);
-        sky_1.width = stageW;
-        sky_1.height = stageH;
+        var sky_3 = this.createBitmapByName("cloud_jpg");
+        Page_3.addChild(sky_3);
+        sky_3.width = stageW;
+        sky_3.height = stageH;
         var topMask = new egret.Shape();
         topMask.graphics.beginFill(0x000000, 0.3);
         topMask.graphics.drawRect(0, 0, stageW, 172);
@@ -149,7 +149,7 @@ var Main = (function (_super) {
         colorLabel.textColor = 0xffffff;
         colorLabel.width = stageW - 172;
         colorLabel.textAlign = "center";
-        colorLabel.text = "你好";
+        colorLabel.text = "白宇昆";
         colorLabel.size = 24;
         colorLabel.x = 172;
         colorLabel.y = 80;

@@ -127,7 +127,7 @@ class Main extends egret.DisplayObjectContainer {
         pagemove(Page_1);//页面具有滑动效果
 
          var sky_1:egret.Bitmap = this.createBitmapByName("bz_jpg");
-        this.addChild(sky_1);
+        Page_1.addChild(sky_1);
         sky_1.width = stageW;
         sky_1.height = stageH;
 
@@ -136,8 +136,8 @@ class Main extends egret.DisplayObjectContainer {
         Page_2.touchEnabled = true;
         pagemove(Page_2);//页面具有滑动效果
 
-         var sky_2:egret.Bitmap = this.createBitmapByName("light_jpg");
-        this.addChild(sky_2);
+        var sky_2:egret.Bitmap = this.createBitmapByName("light_jpg");
+        Page_2.addChild(sky_2);
         sky_2.width = stageW;
         sky_2.height = stageH;
 
@@ -146,10 +146,10 @@ class Main extends egret.DisplayObjectContainer {
         Page_3.touchEnabled = true;
         pagemove(Page_3);//页面具有滑动效果
 
-         var sky_1:egret.Bitmap = this.createBitmapByName("cloud_jpg");
-        this.addChild(sky_1);
-        sky_1.width = stageW;
-        sky_1.height = stageH;
+        var sky_3:egret.Bitmap = this.createBitmapByName("cloud_jpg");
+        Page_3.addChild(sky_3);
+        sky_3.width = stageW;
+        sky_3.height = stageH;
 
         var topMask = new egret.Shape();
         topMask.graphics.beginFill(0x000000, 0.3);
@@ -177,7 +177,7 @@ class Main extends egret.DisplayObjectContainer {
         colorLabel.textColor = 0xffffff;
         colorLabel.width = stageW - 172;
         colorLabel.textAlign = "center";
-        colorLabel.text = "你好";
+        colorLabel.text = "白宇昆";
         colorLabel.size = 24;
         colorLabel.x = 172;
         colorLabel.y = 80;
@@ -219,9 +219,8 @@ class Main extends egret.DisplayObjectContainer {
      * 描述文件加载成功，开始播放动画
      * Description file loading is successful, start to play the animation
      */
-    private startAnimation(result:Array<any>):void {
+   private startAnimation(result:Array<any>):void {
         var self:any = this;
-
         var parser = new egret.HtmlTextParser();
         var textflowArr:Array<Array<egret.ITextElement>> = [];
         for (var i:number = 0; i < result.length; i++) {
@@ -245,7 +244,6 @@ class Main extends egret.DisplayObjectContainer {
             tw.to({"alpha": 0}, 200);
             tw.call(change, self);
         };
-
         change();
     }
 
