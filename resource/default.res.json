@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,bz_jpg,egret_icon_png,description_json,end_jpg,cloud_jpg,just_jpg,light_jpg",
+			"keys": "bg_jpg,bz_jpg,egret_icon_png,description_json,end_jpg,cloud_jpg,just_jpg,light_jpg,tou_jpeg",
 			"name": "preload"
 		}
 	],
@@ -45,6 +45,11 @@
 			"name": "light_jpg",
 			"type": "image",
 			"url": "assets/light.jpg"
+		},
+		{
+			"name": "tou_jpeg",
+			"type": "image",
+			"url": "assets/tou.jpeg"
 		}
 	]
 }

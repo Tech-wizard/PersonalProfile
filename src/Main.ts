@@ -158,7 +158,7 @@ class Main extends egret.DisplayObjectContainer {
         topMask.y = 33;
         this.addChild(topMask);
 
-        var icon:egret.Bitmap = this.createBitmapByName("egret_icon_png");
+        var icon:egret.Bitmap = this.createBitmapByName("tou_jpeg");
         this.addChild(icon);
         icon.x = 26;
         icon.y = 33;
@@ -270,14 +270,14 @@ class Page extends egret.DisplayObjectContainer {   //实现翻页用的page类
     private mouseMove(evt:egret.TouchEvent) {
             if( this._touchStatus ) {
                  this.y = evt.stageY - this._distance.y;
-                 if( this.y < -500 ){
-                     egret.Tween.get( this ).to( {x:0,y:-1136}, 400, egret.Ease.sineIn )
+                 if( this.y < -this.stage.stageHeight/2 ){
+                     egret.Tween.get( this ).to( {x:0,y:-1136}, 350, egret.Ease.sineIn )
                      .wait(300).to({x:0,y:0}, 100, egret.Ease.sineIn);
                      this.parent.addChildAt(this,0);
                      this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
                  }
-                 if( this.y > 500 ){
-                     egret.Tween.get( this ).to( {x:0,y:-1136}, 400, egret.Ease.sineIn )
+                 if( this.y > this.stage.stageHeight/2 ){
+                     egret.Tween.get( this ).to( {x:0,y:-1136}, 350, egret.Ease.sineIn )
                      .wait(300).to({x:0,y:0}, 100, egret.Ease.sineIn);
                      this.parent.addChildAt(this,0);
                      this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
@@ -287,11 +287,11 @@ class Page extends egret.DisplayObjectContainer {   //实现翻页用的page类
 
     public mouseUp(evt:egret.TouchEvent) {
             this._touchStatus = false;
-            if( this.y >= -500 ) {
-                egret.Tween.get( this ).to( {x:0,y:0}, 300, egret.Ease.sineIn );
+            if( this.y >= -this.stage.stageHeight/2 ) {
+                egret.Tween.get( this ).to( {x:0,y:0}, 250, egret.Ease.sineIn );
             }
-            if( this.y <= 500 ) {
-                egret.Tween.get( this ).to( {x:0,y:0}, 300, egret.Ease.sineIn );
+            if( this.y <= this.stage.stageHeight/2 ) {
+                egret.Tween.get( this ).to( {x:0,y:0}, 250, egret.Ease.sineIn );
             }
             this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
     }
