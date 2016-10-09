@@ -117,15 +117,42 @@ class Main extends egret.DisplayObjectContainer {
      * Create a game scene
      */
     private createGameScene():void {
-        var sky:egret.Bitmap = this.createBitmapByName("bz_jpg");
-        this.addChild(sky);
         var stageW:number = this.stage.stageWidth;
         var stageH:number = this.stage.stageHeight;
-        sky.width = stageW;
-        sky.height = stageH;
+
+
+        var Page_1:Page = new Page();
+        this.addChild(Page_1);
+        Page_1.touchEnabled = true;
+        pagemove(Page_1);//页面具有滑动效果
+
+         var sky_1:egret.Bitmap = this.createBitmapByName("bz_jpg");
+        this.addChild(sky_1);
+        sky_1.width = stageW;
+        sky_1.height = stageH;
+
+        var Page_2:Page = new Page();
+        this.addChild(Page_2);
+        Page_2.touchEnabled = true;
+        pagemove(Page_2);//页面具有滑动效果
+
+         var sky_2:egret.Bitmap = this.createBitmapByName("light_jpg");
+        this.addChild(sky_2);
+        sky_2.width = stageW;
+        sky_2.height = stageH;
+
+        var Page_3:Page = new Page();
+        this.addChild(Page_3);
+        Page_3.touchEnabled = true;
+        pagemove(Page_3);//页面具有滑动效果
+
+         var sky_1:egret.Bitmap = this.createBitmapByName("cloud_jpg");
+        this.addChild(sky_1);
+        sky_1.width = stageW;
+        sky_1.height = stageH;
 
         var topMask = new egret.Shape();
-        topMask.graphics.beginFill(0x000000, 0.5);
+        topMask.graphics.beginFill(0x000000, 0.3);
         topMask.graphics.drawRect(0, 0, stageW, 172);
         topMask.graphics.endFill();
         topMask.y = 33;
@@ -170,6 +197,11 @@ class Main extends egret.DisplayObjectContainer {
         //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。
         // Get asynchronously a json configuration file according to name keyword. As for the property of name please refer to the configuration file of resources/resource.json.
         RES.getResAsync("description_json", this.startAnimation, this)
+
+        function pagemove(p:Page):void {
+             p.addEventListener(egret.TouchEvent.TOUCH_BEGIN, p.mouseDown, p);
+             p.addEventListener(egret.TouchEvent.TOUCH_END, p.mouseUp, p);            
+        }  
     }
 
     /**
@@ -229,7 +261,7 @@ class Main extends egret.DisplayObjectContainer {
 class Page extends egret.DisplayObjectContainer {   //实现翻页用的page类
 
     private _touchStatus:boolean = false;              //当前触摸状态，按下时，值为true
-    private _distance:egret.Point = new egret.Point(); //鼠标点击时，鼠标全局坐标与_bird的位置差
+    private _distance:egret.Point = new egret.Point(); //鼠标点击时，记录坐标位置差
 
     public mouseDown(evt:egret.TouchEvent) {
              this._touchStatus = true;
@@ -265,4 +297,5 @@ class Page extends egret.DisplayObjectContainer {   //实现翻页用的page类
             }
             this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
     }
+   
 }

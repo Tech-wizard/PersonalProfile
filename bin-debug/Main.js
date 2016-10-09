@@ -101,14 +101,34 @@ var Main = (function (_super) {
      * Create a game scene
      */
     p.createGameScene = function () {
-        var sky = this.createBitmapByName("bz_jpg");
-        this.addChild(sky);
         var stageW = this.stage.stageWidth;
         var stageH = this.stage.stageHeight;
-        sky.width = stageW;
-        sky.height = stageH;
+        var Page_1 = new Page();
+        this.addChild(Page_1);
+        Page_1.touchEnabled = true;
+        pagemove(Page_1); //页面具有滑动效果
+        var sky_1 = this.createBitmapByName("bz_jpg");
+        this.addChild(sky_1);
+        sky_1.width = stageW;
+        sky_1.height = stageH;
+        var Page_2 = new Page();
+        this.addChild(Page_2);
+        Page_2.touchEnabled = true;
+        pagemove(Page_2); //页面具有滑动效果
+        var sky_2 = this.createBitmapByName("light_jpg");
+        this.addChild(sky_2);
+        sky_2.width = stageW;
+        sky_2.height = stageH;
+        var Page_3 = new Page();
+        this.addChild(Page_3);
+        Page_3.touchEnabled = true;
+        pagemove(Page_3); //页面具有滑动效果
+        var sky_1 = this.createBitmapByName("cloud_jpg");
+        this.addChild(sky_1);
+        sky_1.width = stageW;
+        sky_1.height = stageH;
         var topMask = new egret.Shape();
-        topMask.graphics.beginFill(0x000000, 0.5);
+        topMask.graphics.beginFill(0x000000, 0.3);
         topMask.graphics.drawRect(0, 0, stageW, 172);
         topMask.graphics.endFill();
         topMask.y = 33;
@@ -147,6 +167,10 @@ var Main = (function (_super) {
         //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。
         // Get asynchronously a json configuration file according to name keyword. As for the property of name please refer to the configuration file of resources/resource.json.
         RES.getResAsync("description_json", this.startAnimation, this);
+        function pagemove(p) {
+            p.addEventListener(egret.TouchEvent.TOUCH_BEGIN, p.mouseDown, p);
+            p.addEventListener(egret.TouchEvent.TOUCH_END, p.mouseUp, p);
+        }
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
@@ -196,4 +220,47 @@ var Main = (function (_super) {
     return Main;
 }(egret.DisplayObjectContainer));
 egret.registerClass(Main,'Main');
+var Page = (function (_super) {
+    __extends(Page, _super);
+    function Page() {
+        _super.apply(this, arguments);
+        this._touchStatus = false; //当前触摸状态，按下时，值为true
+        this._distance = new egret.Point(); //鼠标点击时，记录坐标位置差
+    }
+    var d = __define,c=Page,p=c.prototype;
+    p.mouseDown = function (evt) {
+        this._touchStatus = true;
+        this._distance.y = evt.stageY - this.y;
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+    };
+    p.mouseMove = function (evt) {
+        if (this._touchStatus) {
+            this.y = evt.stageY - this._distance.y;
+            if (this.y < -500) {
+                egret.Tween.get(this).to({ x: 0, y: -1136 }, 400, egret.Ease.sineIn)
+                    .wait(300).to({ x: 0, y: 0 }, 100, egret.Ease.sineIn);
+                this.parent.addChildAt(this, 0);
+                this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+            }
+            if (this.y > 500) {
+                egret.Tween.get(this).to({ x: 0, y: -1136 }, 400, egret.Ease.sineIn)
+                    .wait(300).to({ x: 0, y: 0 }, 100, egret.Ease.sineIn);
+                this.parent.addChildAt(this, 0);
+                this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+            }
+        }
+    };
+    p.mouseUp = function (evt) {
+        this._touchStatus = false;
+        if (this.y >= -500) {
+            egret.Tween.get(this).to({ x: 0, y: 0 }, 300, egret.Ease.sineIn);
+        }
+        if (this.y <= 500) {
+            egret.Tween.get(this).to({ x: 0, y: 0 }, 300, egret.Ease.sineIn);
+        }
+        this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+    };
+    return Page;
+}(egret.DisplayObjectContainer));
+egret.registerClass(Page,'Page');
 //# sourceMappingURL=Main.js.map

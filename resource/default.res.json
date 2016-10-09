@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,bz_jpg,egret_icon_png,description_json",
+			"keys": "bg_jpg,bz_jpg,egret_icon_png,description_json,end_jpg,cloud_jpg,just_jpg,light_jpg",
 			"name": "preload"
 		}
 	],
@@ -25,6 +25,26 @@
 			"url": "assets/bz.jpg",
 			"type": "image",
 			"name": "bz_jpg"
+		},
+		{
+			"name": "end_jpg",
+			"type": "image",
+			"url": "assets/end.jpg"
+		},
+		{
+			"name": "cloud_jpg",
+			"type": "image",
+			"url": "assets/cloud.jpg"
+		},
+		{
+			"name": "just_jpg",
+			"type": "image",
+			"url": "assets/just.jpg"
+		},
+		{
+			"name": "light_jpg",
+			"type": "image",
+			"url": "assets/light.jpg"
 		}
 	]
 }
