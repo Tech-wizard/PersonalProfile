@@ -30,7 +30,7 @@ var Main = (function (_super) {
     __extends(Main, _super);
     function Main() {
         _super.call(this);
-        this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
+        this.once(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
     }
     var d = __define,c=Main,p=c.prototype;
     p.onAddToStage = function (event) {
@@ -42,6 +42,32 @@ var Main = (function (_super) {
         //initiate Resource loading library
         RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         RES.loadConfig("resource/default.res.json", "resource/");
+    };
+    p.launchAnimations = function () {
+        var _this = this;
+        this._iAnimMode = AnimModes.ANIM_ROT;
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            _this._iAnimMode = (_this._iAnimMode + 1) % 3;
+        }, this);
+        this._nScaleBase = 0;
+        /// 根据当前模式调整旋转度数或缩放正弦基数形成相应动画
+        this.addEventListener(egret.Event.ENTER_FRAME, function (evt) {
+            /*** 本示例关键代码段开始 ***/
+            switch (_this._iAnimMode) {
+                case AnimModes.ANIM_ROT:
+                    _this.Mlab.rotation += Main.STEP_ROT;
+                    break;
+                case AnimModes.ANIM_SCALE:
+                    _this.Mlab.scaleX = _this.Mlab.scaleY = 0.8 + 0.5 * Math.abs(Math.sin(_this._nScaleBase += Main.STEP_SCALE));
+                    break;
+            }
+            /*** 本示例关键代码段结束 ***/
+            // this._txInfo.text = 
+            //       "旋转角度:" + this.Mlab.rotation 
+            //     +"\n缩放比例:" + this.Mlab.scaleX.toFixed(2)
+            //     +"\n\n轻触进入" +(["缩放","静止","旋转"][this._iAnimMode])+ "模式";
+            return false; /// 友情提示： startTick 中回调返回值表示执行结束是否立即重绘
+        }, this);
     };
     /**
      * 配置文件加载完成,开始预加载preload资源组。
@@ -107,10 +133,41 @@ var Main = (function (_super) {
         this.addChild(Page_1);
         Page_1.touchEnabled = true;
         pagemove(Page_1); //页面具有滑动效果
-        var sky_1 = this.createBitmapByName("bz_jpg");
+        var sky_1 = this.createBitmapByName("end_jpg");
         Page_1.addChild(sky_1);
         sky_1.width = stageW;
         sky_1.height = stageH;
+        var text = new egret.TextField();
+        text.textColor = 0xffffff;
+        text.width = 540;
+        text.size = 30;
+        text.lineSpacing = 40;
+        //设置文本的混合样式
+        text.textFlow = [
+            { text: "我学了使用", style: { "size": 30 } },
+            { text: "Egret", style: { "textColor": 0x336699, "size": 60, "strokeColor": 0x6699cc, "stroke": 2 } },
+            { text: "里说一句话能包含", style: { "fontFamily": "楷体" } },
+            { text: "各种", style: { "fontFamily": "楷体", "underline": true } },
+            { text: "五", style: { "textColor": 0xff0000 } },
+            { text: "彩", style: { "textColor": 0x00ff00 } },
+            { text: "缤", style: { "textColor": 0xf000f0 } },
+            { text: "纷", style: { "textColor": 0x00ffff } },
+            { text: "、\n" },
+            { text: "大", style: { "size": 56 } },
+            { text: "小", style: { "size": 16 } },
+            { text: "不", style: { "size": 26 } },
+            { text: "一", style: { "size": 34 } },
+            { text: "、" },
+            { text: "格", style: { "italic": true, "textColor": 0x00ff00 } },
+            { text: "式", style: { "size": 26, "textColor": 0xf000f0 } },
+            { text: "各", style: { "italic": true, "textColor": 0xf06f00 } },
+            { text: "样的文字", style: { "fontFamily": "KaiTi" } },
+            { text: "这很强！" }
+        ];
+        /*** 本示例关键代码段结束 ***/
+        text.x = 320 - text.textWidth / 2;
+        text.y = 400 - text.textHeight / 2;
+        Page_1.addChild(text);
         var Page_2 = new Page();
         this.addChild(Page_2);
         Page_2.touchEnabled = true;
@@ -142,7 +199,7 @@ var Main = (function (_super) {
         line.graphics.moveTo(0, 0);
         line.graphics.lineTo(0, 117);
         line.graphics.endFill();
-        line.x = 172;
+        line.x = 216;
         line.y = 61;
         this.addChild(line);
         var colorLabel = new egret.TextField();
@@ -154,6 +211,25 @@ var Main = (function (_super) {
         colorLabel.x = 172;
         colorLabel.y = 80;
         this.addChild(colorLabel);
+        /// 展示用显示对象： 乐符按钮
+        this.Mlab = this.createBitmapByName("normalmusic_svg");
+        this.addChild(this.Mlab);
+        this.Mlab.anchorOffsetX = this.Mlab.width / 2;
+        this.Mlab.anchorOffsetY = this.Mlab.height / 2;
+        this.Mlab.x = this.stage.stageWidth * 11 / 12;
+        this.Mlab.y = this.stage.stageHeight * 0.24;
+        /// 提示信息
+        this._txInfo = new egret.TextField;
+        this.addChild(this._txInfo);
+        this._txInfo.size = 28; /* private _txInfo:egret.TextField; */
+        this._txInfo.x = 50;
+        this._txInfo.y = 50;
+        this._txInfo.textAlign = egret.HorizontalAlign.LEFT;
+        this._txInfo.textColor = 0x000000;
+        this._txInfo.type = egret.TextFieldType.DYNAMIC;
+        this._txInfo.lineSpacing = 6;
+        this._txInfo.multiline = true;
+        this.launchAnimations();
         var textfield = new egret.TextField();
         this.addChild(textfield);
         textfield.alpha = 0;
@@ -217,6 +293,9 @@ var Main = (function (_super) {
     p.changeDescription = function (textfield, textFlow) {
         textfield.textFlow = textFlow;
     };
+    /// 旋转及缩放步长设定
+    Main.STEP_ROT = 3;
+    Main.STEP_SCALE = .03;
     return Main;
 }(egret.DisplayObjectContainer));
 egret.registerClass(Main,'Main');
@@ -253,18 +332,23 @@ var Page = (function (_super) {
     p.mouseUp = function (evt) {
         this._touchStatus = false;
         if (this.y >= -this.stage.stageHeight / 2) {
-            // egret.Tween.get( this ).to( {x:0,y:0}, 250, egret.Ease.sineIn );
-            egret.Tween.get(this).to({ x: 0, y: -1136 }, 350, egret.Ease.sineIn)
-                .wait(300).to({ x: 0, y: 0 }, 100, egret.Ease.sineIn);
+            egret.Tween.get(this).to({ x: 0, y: 0 }, 300, egret.Ease.sineIn);
         }
-        // if( this.y <= this.stage.stageHeight/2 ) {
-        //     //egret.Tween.get( this ).to( {x:0,y:0}, 250, egret.Ease.sineIn );
-        //     egret.Tween.get( this ).to( {x:0,y:-1136}, 350, egret.Ease.sineIn )
-        //          .wait(300).to({x:0,y:0}, 100, egret.Ease.sineIn);
-        // }
+        if (this.y <= this.stage.stageHeight / 2) {
+            egret.Tween.get(this).to({ x: 0, y: 0 }, 300, egret.Ease.sineIn);
+        }
         this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
     };
     return Page;
 }(egret.DisplayObjectContainer));
 egret.registerClass(Page,'Page');
+var AnimModes = (function () {
+    function AnimModes() {
+    }
+    var d = __define,c=AnimModes,p=c.prototype;
+    AnimModes.ANIM_ROT = 0;
+    AnimModes.ANIM_SCALE = 1;
+    return AnimModes;
+}());
+egret.registerClass(AnimModes,'AnimModes');
 //# sourceMappingURL=Main.js.map

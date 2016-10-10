@@ -29,18 +29,19 @@
 
 class Main extends egret.DisplayObjectContainer {
 
-    /**
-     * 加载进度界面
-     * Process interface loading
-     */
-    private loadingView:LoadingUI;
+
+         /// 旋转及缩放步长设定
+    private static STEP_ROT:number = 3;
+    private static STEP_SCALE:number = .03;
 
     public constructor() {
         super();
-        this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
+        this.once( egret.Event.ADDED_TO_STAGE, this.onAddToStage, this );
     }
 
-    private onAddToStage(event:egret.Event) {
+   
+    
+    private onAddToStage(event: egret.Event) {
         //设置加载进度界面
         //Config to load process interface
         this.loadingView = new LoadingUI();
@@ -50,13 +51,67 @@ class Main extends egret.DisplayObjectContainer {
         //initiate Resource loading library
         RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         RES.loadConfig("resource/default.res.json", "resource/");
+  
+       
     }
+
+    private Mlab:egret.Bitmap;
+    private _txInfo:egret.TextField;
+    
+   
+    
+    
+    
+  private launchAnimations():void {
+        
+        this._iAnimMode = AnimModes.ANIM_ROT;
+        this.stage.addEventListener( egret.TouchEvent.TOUCH_TAP, ()=>{
+            this._iAnimMode = ( this._iAnimMode + 1 ) % 3;
+        }, this );
+
+        this._nScaleBase = 0;
+        
+        /// 根据当前模式调整旋转度数或缩放正弦基数形成相应动画
+        this.addEventListener( egret.Event.ENTER_FRAME, ( evt:egret.Event )=>{
+
+            /*** 本示例关键代码段开始 ***/
+            switch ( this._iAnimMode ){
+                case AnimModes.ANIM_ROT:        /// 仅旋转
+                    this.Mlab.rotation += Main.STEP_ROT;
+                    break;
+                case AnimModes.ANIM_SCALE:        /// 仅缩放，缩放范围 0.5~1
+                    this.Mlab.scaleX = this.Mlab.scaleY = 0.8 + 0.5* Math.abs( Math.sin( this._nScaleBase += Main.STEP_SCALE ) );
+                    break;
+            }
+            /*** 本示例关键代码段结束 ***/
+
+            // this._txInfo.text = 
+            //       "旋转角度:" + this.Mlab.rotation 
+            //     +"\n缩放比例:" + this.Mlab.scaleX.toFixed(2)
+            //     +"\n\n轻触进入" +(["缩放","静止","旋转"][this._iAnimMode])+ "模式";
+            
+            return false;  /// 友情提示： startTick 中回调返回值表示执行结束是否立即重绘
+        }, this );
+    }
+
+    /// 用于记录当前的模式，模式切换通过触摸舞台触发
+    private _iAnimMode:number;
+    private _nScaleBase:number;
+
+  
+    /**
+     * 加载进度界面
+     * Process interface loading
+     */
+    private loadingView: LoadingUI;
+
+  
 
     /**
      * 配置文件加载完成,开始预加载preload资源组。
      * configuration file loading is completed, start to pre-load the preload resource group
      */
-    private onConfigComplete(event:RES.ResourceEvent):void {
+    private onConfigComplete(event: RES.ResourceEvent): void {
         RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
         RES.addEventListener(RES.ResourceEvent.GROUP_LOAD_ERROR, this.onResourceLoadError, this);
@@ -69,7 +124,7 @@ class Main extends egret.DisplayObjectContainer {
      * preload资源组加载完成
      * Preload resource group is loaded
      */
-    private onResourceLoadComplete(event:RES.ResourceEvent):void {
+    private onResourceLoadComplete(event: RES.ResourceEvent): void {
         if (event.groupName == "preload") {
             this.stage.removeChild(this.loadingView);
             RES.removeEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
@@ -84,7 +139,7 @@ class Main extends egret.DisplayObjectContainer {
      * 资源组加载出错
      *  The resource group loading failed
      */
-    private onItemLoadError(event:RES.ResourceEvent):void {
+    private onItemLoadError(event: RES.ResourceEvent): void {
         console.warn("Url:" + event.resItem.url + " has failed to load");
     }
 
@@ -92,7 +147,7 @@ class Main extends egret.DisplayObjectContainer {
      * 资源组加载出错
      *  The resource group loading failed
      */
-    private onResourceLoadError(event:RES.ResourceEvent):void {
+    private onResourceLoadError(event: RES.ResourceEvent): void {
         //TODO
         console.warn("Group:" + event.groupName + " has failed to load");
         //忽略加载失败的项目
@@ -104,49 +159,87 @@ class Main extends egret.DisplayObjectContainer {
      * preload资源组加载进度
      * Loading process of preload resource group
      */
-    private onResourceProgress(event:RES.ResourceEvent):void {
+    private onResourceProgress(event: RES.ResourceEvent): void {
         if (event.groupName == "preload") {
             this.loadingView.setProgress(event.itemsLoaded, event.itemsTotal);
         }
     }
 
-    private textfield:egret.TextField;
+    private textfield: egret.TextField;
 
     /**
      * 创建游戏场景
      * Create a game scene
      */
-    private createGameScene():void {
-        var stageW:number = this.stage.stageWidth;
-        var stageH:number = this.stage.stageHeight;
+    private createGameScene(): void {
+        var stageW: number = this.stage.stageWidth;
+        var stageH: number = this.stage.stageHeight;
 
 
-        var Page_1:Page = new Page();
+        var Page_1: Page = new Page();
         this.addChild(Page_1);
         Page_1.touchEnabled = true;
         pagemove(Page_1);//页面具有滑动效果
 
-         var sky_1:egret.Bitmap = this.createBitmapByName("bz_jpg");
+        var sky_1: egret.Bitmap = this.createBitmapByName("end_jpg");
         Page_1.addChild(sky_1);
         sky_1.width = stageW;
         sky_1.height = stageH;
 
-        var Page_2:Page = new Page();
+        var text: egret.TextField = new egret.TextField();
+        text.textColor = 0xffffff;
+        text.width = 540;
+        text.size = 30;
+        text.lineSpacing = 40;
+
+       
+        //设置文本的混合样式
+        text.textFlow = <Array<egret.ITextElement>>[
+            { text: "我学了使用", style: { "size": 30 } },
+            { text: "Egret", style: { "textColor": 0x336699, "size": 60, "strokeColor": 0x6699cc, "stroke": 2 } },
+            { text: "里说一句话能包含", style: { "fontFamily": "楷体" } },
+            { text: "各种", style: { "fontFamily": "楷体", "underline": true } },
+            { text: "五", style: { "textColor": 0xff0000 } },
+            { text: "彩", style: { "textColor": 0x00ff00 } },
+            { text: "缤", style: { "textColor": 0xf000f0 } },
+            { text: "纷", style: { "textColor": 0x00ffff } },
+            { text: "、\n" },
+            { text: "大", style: { "size": 56 } },
+            { text: "小", style: { "size": 16 } },
+            { text: "不", style: { "size": 26 } },
+            { text: "一", style: { "size": 34 } },
+            { text: "、" },
+            { text: "格", style: { "italic": true, "textColor": 0x00ff00 } },
+            { text: "式", style: { "size": 26, "textColor": 0xf000f0 } },
+            { text: "各", style: { "italic": true, "textColor": 0xf06f00 } },
+            { text: "样的文字", style: { "fontFamily": "KaiTi" } },//楷体
+            { text: "这很强！" }
+        ];
+        /*** 本示例关键代码段结束 ***/
+
+        text.x = 320 - text.textWidth / 2;
+        text.y = 400 - text.textHeight / 2;
+        Page_1.addChild(text);
+
+
+        var Page_2: Page = new Page();
         this.addChild(Page_2);
         Page_2.touchEnabled = true;
         pagemove(Page_2);//页面具有滑动效果
 
-        var sky_2:egret.Bitmap = this.createBitmapByName("light_jpg");
+        var sky_2: egret.Bitmap = this.createBitmapByName("light_jpg");
         Page_2.addChild(sky_2);
         sky_2.width = stageW;
         sky_2.height = stageH;
 
-        var Page_3:Page = new Page();
+        var Page_3: Page = new Page();
         this.addChild(Page_3);
         Page_3.touchEnabled = true;
         pagemove(Page_3);//页面具有滑动效果
 
-        var sky_3:egret.Bitmap = this.createBitmapByName("cloud_jpg");
+
+
+        var sky_3: egret.Bitmap = this.createBitmapByName("cloud_jpg");
         Page_3.addChild(sky_3);
         sky_3.width = stageW;
         sky_3.height = stageH;
@@ -158,19 +251,21 @@ class Main extends egret.DisplayObjectContainer {
         topMask.y = 33;
         this.addChild(topMask);
 
-        var icon:egret.Bitmap = this.createBitmapByName("tou_jpeg");
+        var icon: egret.Bitmap = this.createBitmapByName("tou_jpeg");
         this.addChild(icon);
         icon.x = 26;
         icon.y = 33;
 
         var line = new egret.Shape();
-        line.graphics.lineStyle(2,0xffffff);
-        line.graphics.moveTo(0,0);
-        line.graphics.lineTo(0,117);
+        line.graphics.lineStyle(2, 0xffffff);
+        line.graphics.moveTo(0, 0);
+        line.graphics.lineTo(0, 117);
         line.graphics.endFill();
-        line.x = 172;
+        line.x = 216;
         line.y = 61;
         this.addChild(line);
+
+
 
 
         var colorLabel = new egret.TextField();
@@ -182,6 +277,31 @@ class Main extends egret.DisplayObjectContainer {
         colorLabel.x = 172;
         colorLabel.y = 80;
         this.addChild(colorLabel);
+
+    /// 展示用显示对象： 乐符按钮
+        this.Mlab = this.createBitmapByName("normalmusic_svg");
+        this.addChild( this.Mlab );
+
+        this.Mlab.anchorOffsetX = this.Mlab.width/2;
+        this.Mlab.anchorOffsetY = this.Mlab.height/2;
+        this.Mlab.x = this.stage.stageWidth*11 / 12;
+        this.Mlab.y = this.stage.stageHeight * 0.24;
+
+        /// 提示信息
+        this._txInfo = new egret.TextField;
+        this.addChild( this._txInfo );
+        
+        this._txInfo.size = 28;  /* private _txInfo:egret.TextField; */
+        this._txInfo.x = 50;
+        this._txInfo.y = 50;
+        this._txInfo.textAlign = egret.HorizontalAlign.LEFT;
+        this._txInfo.textColor = 0x000000;
+        this._txInfo.type = egret.TextFieldType.DYNAMIC;
+        this._txInfo.lineSpacing = 6;
+        this._txInfo.multiline = true;
+        
+        this.launchAnimations();
+
 
         var textfield = new egret.TextField();
         this.addChild(textfield);
@@ -198,19 +318,19 @@ class Main extends egret.DisplayObjectContainer {
         // Get asynchronously a json configuration file according to name keyword. As for the property of name please refer to the configuration file of resources/resource.json.
         RES.getResAsync("description_json", this.startAnimation, this)
 
-        function pagemove(p:Page):void {
-             p.addEventListener(egret.TouchEvent.TOUCH_BEGIN, p.mouseDown, p);
-             p.addEventListener(egret.TouchEvent.TOUCH_END, p.mouseUp, p);            
-        }  
+        function pagemove(p: Page): void {
+            p.addEventListener(egret.TouchEvent.TOUCH_BEGIN, p.mouseDown, p);
+            p.addEventListener(egret.TouchEvent.TOUCH_END, p.mouseUp, p);
+        }
     }
 
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
      * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
      */
-    private createBitmapByName(name:string):egret.Bitmap {
+    private createBitmapByName(name: string): egret.Bitmap {
         var result = new egret.Bitmap();
-        var texture:egret.Texture = RES.getRes(name);
+        var texture: egret.Texture = RES.getRes(name);
         result.texture = texture;
         return result;
     }
@@ -219,17 +339,17 @@ class Main extends egret.DisplayObjectContainer {
      * 描述文件加载成功，开始播放动画
      * Description file loading is successful, start to play the animation
      */
-   private startAnimation(result:Array<any>):void {
-        var self:any = this;
+    private startAnimation(result: Array<any>): void {
+        var self: any = this;
         var parser = new egret.HtmlTextParser();
-        var textflowArr:Array<Array<egret.ITextElement>> = [];
-        for (var i:number = 0; i < result.length; i++) {
+        var textflowArr: Array<Array<egret.ITextElement>> = [];
+        for (var i: number = 0; i < result.length; i++) {
             textflowArr.push(parser.parser(result[i]));
         }
 
         var textfield = self.textfield;
         var count = -1;
-        var change:Function = function () {
+        var change: Function = function () {
             count++;
             if (count >= textflowArr.length) {
                 count = 0;
@@ -239,9 +359,9 @@ class Main extends egret.DisplayObjectContainer {
             self.changeDescription(textfield, lineArr);
 
             var tw = egret.Tween.get(textfield);
-            tw.to({"alpha": 1}, 200);
+            tw.to({ "alpha": 1 }, 200);
             tw.wait(2000);
-            tw.to({"alpha": 0}, 200);
+            tw.to({ "alpha": 0 }, 200);
             tw.call(change, self);
         };
         change();
@@ -251,53 +371,57 @@ class Main extends egret.DisplayObjectContainer {
      * 切换描述内容
      * Switch to described content
      */
-    private changeDescription(textfield:egret.TextField, textFlow:Array<egret.ITextElement>):void {
+    private changeDescription(textfield: egret.TextField, textFlow: Array<egret.ITextElement>): void {
         textfield.textFlow = textFlow;
     }
 }
 
 class Page extends egret.DisplayObjectContainer {   //实现翻页用的page类
 
-    private _touchStatus:boolean = false;              //当前触摸状态，按下时，值为true
-    private _distance:egret.Point = new egret.Point(); //鼠标点击时，记录坐标位置差
+    private _touchStatus: boolean = false;              //当前触摸状态，按下时，值为true
+    private _distance: egret.Point = new egret.Point(); //鼠标点击时，记录坐标位置差
 
-    public mouseDown(evt:egret.TouchEvent) {
-             this._touchStatus = true;
-             this._distance.y = evt.stageY - this.y;
-             this.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+    public mouseDown(evt: egret.TouchEvent) {
+        this._touchStatus = true;
+        this._distance.y = evt.stageY - this.y;
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
     }
 
-    private mouseMove(evt:egret.TouchEvent) {
-            if( this._touchStatus ) {
-                 this.y = evt.stageY - this._distance.y;
-                 if( this.y < -this.stage.stageHeight/2 ){
-                     egret.Tween.get( this ).to( {x:0,y:-1136}, 350, egret.Ease.sineIn )
-                     .wait(300).to({x:0,y:0}, 100, egret.Ease.sineIn);
-                     this.parent.addChildAt(this,0);
-                     this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
-                 }
-                 if( this.y > this.stage.stageHeight/2 ){
-                     egret.Tween.get( this ).to( {x:0,y:-1136}, 350, egret.Ease.sineIn )
-                     .wait(300).to({x:0,y:0}, 100, egret.Ease.sineIn);
-                     this.parent.addChildAt(this,0);
-                     this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
-                 }                   
-            }            
-    }            
-
-    public mouseUp(evt:egret.TouchEvent) {
-            this._touchStatus = false;
-            if( this.y >= -this.stage.stageHeight/2 ) {
-               // egret.Tween.get( this ).to( {x:0,y:0}, 250, egret.Ease.sineIn );
-               egret.Tween.get( this ).to( {x:0,y:-1136}, 350, egret.Ease.sineIn )
-                     .wait(300).to({x:0,y:0}, 100, egret.Ease.sineIn);
+    private mouseMove(evt: egret.TouchEvent) {
+        if (this._touchStatus) {
+            this.y = evt.stageY - this._distance.y;
+            if (this.y < -this.stage.stageHeight / 2) {
+                egret.Tween.get(this).to({ x: 0, y: -1136 }, 350, egret.Ease.sineIn)
+                    .wait(300).to({ x: 0, y: 0 }, 100, egret.Ease.sineIn);
+                this.parent.addChildAt(this, 0);
+                this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
             }
-            // if( this.y <= this.stage.stageHeight/2 ) {
-            //     //egret.Tween.get( this ).to( {x:0,y:0}, 250, egret.Ease.sineIn );
-            //     egret.Tween.get( this ).to( {x:0,y:-1136}, 350, egret.Ease.sineIn )
-            //          .wait(300).to({x:0,y:0}, 100, egret.Ease.sineIn);
-            // }
-            this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+            if (this.y > this.stage.stageHeight / 2) {
+                egret.Tween.get(this).to({ x: 0, y: -1136 }, 350, egret.Ease.sineIn)
+                    .wait(300).to({ x: 0, y: 0 }, 100, egret.Ease.sineIn);
+                this.parent.addChildAt(this, 0);
+                this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+            }
+
+
+        }
     }
-   
+
+    public mouseUp(evt: egret.TouchEvent) {
+        this._touchStatus = false;
+        if (this.y >= -this.stage.stageHeight / 2) {
+            egret.Tween.get(this).to({ x: 0, y: 0 }, 300, egret.Ease.sineIn);
+        }
+        if (this.y <= this.stage.stageHeight / 2) {
+            egret.Tween.get(this).to({ x: 0, y: 0 }, 300, egret.Ease.sineIn);
+        }
+        this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
+    }
+
 }
+
+class AnimModes{
+    public static ANIM_ROT:number = 0;
+    public static ANIM_SCALE:number = 1;
+}
+
