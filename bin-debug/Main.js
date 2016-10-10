@@ -253,11 +253,15 @@ var Page = (function (_super) {
     p.mouseUp = function (evt) {
         this._touchStatus = false;
         if (this.y >= -this.stage.stageHeight / 2) {
-            egret.Tween.get(this).to({ x: 0, y: 0 }, 250, egret.Ease.sineIn);
+            // egret.Tween.get( this ).to( {x:0,y:0}, 250, egret.Ease.sineIn );
+            egret.Tween.get(this).to({ x: 0, y: -1136 }, 350, egret.Ease.sineIn)
+                .wait(300).to({ x: 0, y: 0 }, 100, egret.Ease.sineIn);
         }
-        if (this.y <= this.stage.stageHeight / 2) {
-            egret.Tween.get(this).to({ x: 0, y: 0 }, 250, egret.Ease.sineIn);
-        }
+        // if( this.y <= this.stage.stageHeight/2 ) {
+        //     //egret.Tween.get( this ).to( {x:0,y:0}, 250, egret.Ease.sineIn );
+        //     egret.Tween.get( this ).to( {x:0,y:-1136}, 350, egret.Ease.sineIn )
+        //          .wait(300).to({x:0,y:0}, 100, egret.Ease.sineIn);
+        // }
         this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
     };
     return Page;
