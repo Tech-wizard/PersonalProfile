@@ -30,17 +30,17 @@
 class Main extends egret.DisplayObjectContainer {
 
 
-         /// 旋转及缩放步长设定
-    private static STEP_ROT:number = 3;
-    private static STEP_SCALE:number = .03;
+    /// 旋转及缩放步长设定
+    private static STEP_ROT: number = 3;
+    private static STEP_SCALE: number = .03;
 
     public constructor() {
         super();
-        this.once( egret.Event.ADDED_TO_STAGE, this.onAddToStage, this );
+        this.once(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
     }
 
-   
-    
+
+
     private onAddToStage(event: egret.Event) {
         //设置加载进度界面
         //Config to load process interface
@@ -51,36 +51,36 @@ class Main extends egret.DisplayObjectContainer {
         //initiate Resource loading library
         RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         RES.loadConfig("resource/default.res.json", "resource/");
-  
-       
+
+
     }
 
-    private Mlab:egret.Bitmap;
-    private _txInfo:egret.TextField;
-    
-   
-    
-    
-    
-  private launchAnimations():void {
-        
+    private Mlab: egret.Bitmap;
+    private _txInfo: egret.TextField;
+
+
+
+
+
+    private launchAnimations(): void {
+
         this._iAnimMode = AnimModes.ANIM_ROT;
-        this.stage.addEventListener( egret.TouchEvent.TOUCH_TAP, ()=>{
-            this._iAnimMode = ( this._iAnimMode + 1 ) % 3;
-        }, this );
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+            this._iAnimMode = (this._iAnimMode + 1) % 3;
+        }, this);
 
         this._nScaleBase = 0;
-        
+
         /// 根据当前模式调整旋转度数或缩放正弦基数形成相应动画
-        this.addEventListener( egret.Event.ENTER_FRAME, ( evt:egret.Event )=>{
+        this.addEventListener(egret.Event.ENTER_FRAME, (evt: egret.Event) => {
 
             /*** 本示例关键代码段开始 ***/
-            switch ( this._iAnimMode ){
+            switch (this._iAnimMode) {
                 case AnimModes.ANIM_ROT:        /// 仅旋转
                     this.Mlab.rotation += Main.STEP_ROT;
                     break;
                 case AnimModes.ANIM_SCALE:        /// 仅缩放，缩放范围 0.5~1
-                    this.Mlab.scaleX = this.Mlab.scaleY = 0.8 + 0.5* Math.abs( Math.sin( this._nScaleBase += Main.STEP_SCALE ) );
+                    this.Mlab.scaleX = this.Mlab.scaleY = 0.8 + 0.5 * Math.abs(Math.sin(this._nScaleBase += Main.STEP_SCALE));
                     break;
             }
             /*** 本示例关键代码段结束 ***/
@@ -89,23 +89,23 @@ class Main extends egret.DisplayObjectContainer {
             //       "旋转角度:" + this.Mlab.rotation 
             //     +"\n缩放比例:" + this.Mlab.scaleX.toFixed(2)
             //     +"\n\n轻触进入" +(["缩放","静止","旋转"][this._iAnimMode])+ "模式";
-            
+
             return false;  /// 友情提示： startTick 中回调返回值表示执行结束是否立即重绘
-        }, this );
+        }, this);
     }
 
     /// 用于记录当前的模式，模式切换通过触摸舞台触发
-    private _iAnimMode:number;
-    private _nScaleBase:number;
+    private _iAnimMode: number;
+    private _nScaleBase: number;
 
-  
+
     /**
      * 加载进度界面
      * Process interface loading
      */
     private loadingView: LoadingUI;
 
-  
+
 
     /**
      * 配置文件加载完成,开始预加载preload资源组。
@@ -181,44 +181,47 @@ class Main extends egret.DisplayObjectContainer {
         Page_1.touchEnabled = true;
         pagemove(Page_1);//页面具有滑动效果
 
-        var sky_1: egret.Bitmap = this.createBitmapByName("end_jpg");
-        Page_1.addChild(sky_1);
-        sky_1.width = stageW;
-        sky_1.height = stageH;
+        // var sky_1: egret.Bitmap = this.createBitmapByName("end_jpg");
+        // Page_1.addChild(sky_1);
+        // sky_1.width = stageW;
+        // sky_1.height = stageH;
+
+         var Blackgound = new egret.Shape();
+        Blackgound.graphics.beginFill(0x6B8E23, 0.9);
+        Blackgound.graphics.drawRect(0, 0, stageW, stageH);
+        Blackgound.graphics.endFill();
+         Page_1.addChild(Blackgound);
 
         var text: egret.TextField = new egret.TextField();
         text.textColor = 0xffffff;
         text.width = 540;
         text.size = 30;
         text.lineSpacing = 40;
+        text.bold = false;
 
-       
+
         //设置文本的混合样式
         text.textFlow = <Array<egret.ITextElement>>[
-            { text: "我学了使用", style: { "size": 30 } },
-            { text: "Egret", style: { "textColor": 0x336699, "size": 60, "strokeColor": 0x6699cc, "stroke": 2 } },
-            { text: "里说一句话能包含", style: { "fontFamily": "楷体" } },
-            { text: "各种", style: { "fontFamily": "楷体", "underline": true } },
-            { text: "五", style: { "textColor": 0xff0000 } },
-            { text: "彩", style: { "textColor": 0x00ff00 } },
-            { text: "缤", style: { "textColor": 0xf000f0 } },
-            { text: "纷", style: { "textColor": 0x00ffff } },
-            { text: "、\n" },
-            { text: "大", style: { "size": 56 } },
-            { text: "小", style: { "size": 16 } },
-            { text: "不", style: { "size": 26 } },
-            { text: "一", style: { "size": 34 } },
-            { text: "、" },
-            { text: "格", style: { "italic": true, "textColor": 0x00ff00 } },
-            { text: "式", style: { "size": 26, "textColor": 0xf000f0 } },
-            { text: "各", style: { "italic": true, "textColor": 0xf06f00 } },
-            { text: "样的文字", style: { "fontFamily": "KaiTi" } },//楷体
-            { text: "这很强！" }
+            { text: "我想要见证", style: { "size": 30 } },
+            { text: "人类", style: { "textColor": 0x32CD99, "size": 60, "strokeColor": 0x6699cc, "stroke": 2 ,"fontFamily": "微软雅黑"} },
+            { text: "文明的", style: { "fontFamily": "微软雅黑" } },
+            { text: "各种", style: { "fontFamily": "楷体"}},
+            { text: "\n科技", style: { "textColor": 0x70DBDB } },
+            { text: "\n社会", style: { "textColor": 0x70DBDB } },
+            { text: "\n文化", style: { "textColor": 0x70DBDB } },
+            { text: "\n信仰", style: { "textColor": 0x70DBDB } },
+            { text: "\n" },
+            { text: "的", style: { "size": 32 } },
+            { text: "发", style: { "size": 30 } },
+            { text: "展\n", style: { "size": 26 } },
+            { text: "吸引我的是", style: { "italic": true, "textColor": 0xff2400 } },
+            { text: "未知的未来！", style: { "fontFamily": "微软雅黑" } },//楷体
+           
         ];
         /*** 本示例关键代码段结束 ***/
 
         text.x = 320 - text.textWidth / 2;
-        text.y = 400 - text.textHeight / 2;
+        text.y = 600 - text.textHeight / 2;
         Page_1.addChild(text);
 
 
@@ -244,8 +247,10 @@ class Main extends egret.DisplayObjectContainer {
         sky_3.width = stageW;
         sky_3.height = stageH;
 
+      
+
         var topMask = new egret.Shape();
-        topMask.graphics.beginFill(0x000000, 0.3);
+        topMask.graphics.beginFill(0x000000, 0.15);
         topMask.graphics.drawRect(0, 0, stageW, 172);
         topMask.graphics.endFill();
         topMask.y = 33;
@@ -273,24 +278,27 @@ class Main extends egret.DisplayObjectContainer {
         colorLabel.width = stageW - 172;
         colorLabel.textAlign = "center";
         colorLabel.text = "白宇昆";
+        colorLabel.stroke = 2;
+        colorLabel.strokeColor = 0x000000;
+
         colorLabel.size = 24;
         colorLabel.x = 172;
         colorLabel.y = 80;
         this.addChild(colorLabel);
 
-    /// 展示用显示对象： 乐符按钮
+        /// 展示用显示对象： 乐符按钮
         this.Mlab = this.createBitmapByName("normalmusic_svg");
-        this.addChild( this.Mlab );
+        this.addChild(this.Mlab);
 
-        this.Mlab.anchorOffsetX = this.Mlab.width/2;
-        this.Mlab.anchorOffsetY = this.Mlab.height/2;
-        this.Mlab.x = this.stage.stageWidth*11 / 12;
+        this.Mlab.anchorOffsetX = this.Mlab.width / 2;
+        this.Mlab.anchorOffsetY = this.Mlab.height / 2;
+        this.Mlab.x = this.stage.stageWidth * 11 / 12;
         this.Mlab.y = this.stage.stageHeight * 0.24;
 
         /// 提示信息
         this._txInfo = new egret.TextField;
-        this.addChild( this._txInfo );
-        
+        this.addChild(this._txInfo);
+
         this._txInfo.size = 28;  /* private _txInfo:egret.TextField; */
         this._txInfo.x = 50;
         this._txInfo.y = 50;
@@ -299,7 +307,7 @@ class Main extends egret.DisplayObjectContainer {
         this._txInfo.type = egret.TextFieldType.DYNAMIC;
         this._txInfo.lineSpacing = 6;
         this._txInfo.multiline = true;
-        
+
         this.launchAnimations();
 
 
@@ -420,8 +428,8 @@ class Page extends egret.DisplayObjectContainer {   //实现翻页用的page类
 
 }
 
-class AnimModes{
-    public static ANIM_ROT:number = 0;
-    public static ANIM_SCALE:number = 1;
+class AnimModes {
+    public static ANIM_ROT: number = 0;
+    public static ANIM_SCALE: number = 1;
 }
 
