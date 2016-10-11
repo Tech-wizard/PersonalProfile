@@ -265,6 +265,15 @@ class Main extends egret.DisplayObjectContainer {
         icon.x = 26;
         icon.y = 33;
 
+        var shockicon: Function = function () {
+            var icontw = egret.Tween.get(icon);
+            icontw.to({ "rotation": 10 }, 100);
+            icontw.to({ "rotation": -10 }, 100);
+            icontw.to({ "rotation": 0 }, 100);
+            icontw.wait(2000);
+            icontw.call(shockicon, self);
+        }
+        shockicon();
         var line = new egret.Shape();
         line.graphics.lineStyle(2, 0xffffff);
         line.graphics.moveTo(0, 0);
