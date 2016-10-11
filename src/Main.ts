@@ -207,7 +207,7 @@ class Main extends egret.DisplayObjectContainer {
         //设置文本的混合样式
         text.textFlow = <Array<egret.ITextElement>>[
             { text: "我想要见证", style: { "size": 30, "textColor": 0x545454 } },
-            { text: "人类", style: { "textColor": 0x32CD99, "size": 60, "strokeColor": 0x6699cc, "stroke": 2, "fontFamily": "微软雅黑" } },
+            { text: "人类", style: { "textColor": 0x32CD99, "size": 60, "strokeColor": 0x000000, "stroke": 2, "fontFamily": "微软雅黑" } },
             { text: "文明的", style: { "fontFamily": "微软雅黑", "textColor": 0x545454 } },
             { text: "各种", style: { "fontFamily": "楷体", "textColor": 0x545454 } },
             { text: "\n科技", style: { "textColor": 0x8E2323 } },
@@ -218,8 +218,8 @@ class Main extends egret.DisplayObjectContainer {
             { text: "的", style: { "size": 32, "textColor": 0x545454 } },
             { text: "发", style: { "size": 30, "textColor": 0x545454 } },
             { text: "展\n", style: { "size": 26, "textColor": 0x545454 } },
-            { text: "吸引我的是", style: { "italic": true, "textColor": 0xff2400 } },
-            { text: "未知的未来！", style: { "fontFamily": "微软雅黑", "textColor": 0x545454 } },//楷体
+            { text: "吸引我的是   ", style: { "italic": true, "textColor": 0xff2400 } },
+            { text: "未知的未来！", style: { "size": 32,"fontFamily": "微软雅黑", "textColor": 0x545454 } },//楷体
 
         ];
         /*** 本示例关键代码段结束 ***/
@@ -239,75 +239,75 @@ class Main extends egret.DisplayObjectContainer {
         sky_2.width = stageW;
         sky_2.height = stageH;
 
-var text_3 = new egret.TextField();
+        var text_3 = new egret.TextField();
         text_3.textColor = 0xffffff;
         text_3.width = stageW - 172;
         text_3.textAlign = "center";
         text_3.text = "想制作成HTML5游戏的类型";
         text_3.size = 26;
-        text_3.anchorOffsetX = text_3.width/2;
-        text_3.anchorOffsetY = text_3.height/2;
-        text_3.x = stageW/2;
+        text_3.anchorOffsetX = text_3.width / 2;
+        text_3.anchorOffsetY = text_3.height / 2;
+        text_3.x = stageW / 2;
         text_3.y = 1060;
         Page_2.addChild(text_3);
 
-       var dc2:egret.Bitmap = this.createBitmapByName("dc2_jpg");
+        var dc2: egret.Bitmap = this.createBitmapByName("dc2_jpg");
         Page_2.addChild(dc2);
         dc2.scaleX = 1;
         dc2.scaleY = 1;
-        dc2.anchorOffsetX = dc2.width/2;
-        dc2.anchorOffsetY = dc2.height/2;
-        dc2.x = this.stage.stageWidth/2;
+        dc2.anchorOffsetX = dc2.width / 2;
+        dc2.anchorOffsetY = dc2.height / 2;
+        dc2.x = this.stage.stageWidth / 2;
         dc2.y = 670;
         dc2.alpha = 1;
- 
-        var eu:egret.Bitmap = this.createBitmapByName("eu_jpg");
+
+        var eu: egret.Bitmap = this.createBitmapByName("eu_jpg");
         Page_2.addChild(eu);
-        eu.scaleX = dc2.width/eu.width;
-        eu.scaleY = dc2.width/eu.width;
-        eu.anchorOffsetX = eu.width/2;
-        eu.anchorOffsetY = eu.height/2;
-        eu.x = this.stage.stageWidth/2;
-        eu.y = this.stage.stageHeight*5/6-50;
+        eu.scaleX = dc2.width / eu.width;
+        eu.scaleY = dc2.width / eu.width;
+        eu.anchorOffsetX = eu.width / 2;
+        eu.anchorOffsetY = eu.height / 2;
+        eu.x = this.stage.stageWidth / 2;
+        eu.y = this.stage.stageHeight * 5 / 6 - 50;
         eu.alpha = 0;
 
-        var rl:egret.Bitmap = this.createBitmapByName("rl_png");
+        var rl: egret.Bitmap = this.createBitmapByName("rl_png");
         Page_2.addChild(rl);
-        rl.scaleX = dc2.width/rl.width;
-        rl.scaleY = dc2.width/rl.width;
-        rl.anchorOffsetX = rl.width/2;
-        rl.anchorOffsetY = rl.height/2;
-        rl.x = this.stage.stageWidth/2;
-        rl.y = this.stage.stageHeight*5/6-50;
+        rl.scaleX = dc2.width / rl.width;
+        rl.scaleY = dc2.width / rl.width;
+        rl.anchorOffsetX = rl.width / 2;
+        rl.anchorOffsetY = rl.height / 2;
+        rl.x = this.stage.stageWidth / 2;
+        rl.y = this.stage.stageHeight * 5 / 6 - 50;
         rl.alpha = 0;
 
 
-    var changedc2:Function = function () {
+        var changedc2: Function = function () {
 
             var dc2tw = egret.Tween.get(dc2);
-            dc2tw.to({"alpha": 1}, 500);
+            dc2tw.to({ "alpha": 1 }, 500);
             dc2tw.wait(3000);
-            dc2tw.to({"alpha": 0}, 500);
+            dc2tw.to({ "alpha": 0 }, 500);
             dc2tw.call(changeeu, self);
 
         }
 
-        var changeeu:Function = function () {
+        var changeeu: Function = function () {
 
             var eutw = egret.Tween.get(eu);
-            eutw.to({"alpha": 1}, 500);
+            eutw.to({ "alpha": 1 }, 500);
             eutw.wait(3000);
-            eutw.to({"alpha": 0}, 500);
+            eutw.to({ "alpha": 0 }, 500);
             eutw.call(changerl, self);
 
         }
 
-        var changerl:Function = function () {
+        var changerl: Function = function () {
 
             var rltw = egret.Tween.get(rl);
-            rltw.to({"alpha": 1}, 500);
+            rltw.to({ "alpha": 1 }, 500);
             rltw.wait(3000);
-            rltw.to({"alpha": 0}, 500);
+            rltw.to({ "alpha": 0 }, 500);
             rltw.call(changedc2, self);
 
         }
@@ -335,7 +335,7 @@ var text_3 = new egret.TextField();
 
 
         text_2.textFlow = <Array<egret.ITextElement>>[
-            { text: "在不远的未来想要从事\n", style: { "size": 30, "fontFamily": "微软雅黑","textColor": 0x000000 } },
+            { text: "在不远的未来想要从事\n", style: { "size": 30, "fontFamily": "微软雅黑", "textColor": 0x000000 } },
             { text: "         不会被AI替代的工作！", style: { "size": 32, "fontFamily": "微软雅黑", "textColor": 0x000000 } },//楷体
 
         ];
@@ -549,13 +549,13 @@ class Page extends egret.DisplayObjectContainer {   //实现翻页用的page类
     private mouseMove(evt: egret.TouchEvent) {
         if (this._touchStatus) {
             this.y = evt.stageY - this._distance.y;
-            if (this.y < -this.stage.stageHeight / 2) {
+            if (this.y < -this.stage.stageHeight * 3 / 5) {
                 egret.Tween.get(this).to({ x: 0, y: -1136 }, 350, egret.Ease.sineIn)
                     .wait(300).to({ x: 0, y: 0 }, 100, egret.Ease.sineIn);
                 this.parent.addChildAt(this, 0);
                 this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
             }
-            if (this.y > this.stage.stageHeight / 2) {
+            if (this.y > this.stage.stageHeight * 3 / 5) {
                 egret.Tween.get(this).to({ x: 0, y: -1136 }, 350, egret.Ease.sineIn)
                     .wait(300).to({ x: 0, y: 0 }, 100, egret.Ease.sineIn);
                 this.parent.addChildAt(this, 0);
@@ -568,10 +568,10 @@ class Page extends egret.DisplayObjectContainer {   //实现翻页用的page类
 
     public mouseUp(evt: egret.TouchEvent) {
         this._touchStatus = false;
-        if (this.y >= -this.stage.stageHeight / 2) {
+        if (this.y >= -this.stage.stageHeight * 3 / 5) {
             egret.Tween.get(this).to({ x: 0, y: 0 }, 300, egret.Ease.sineIn);
         }
-        if (this.y <= this.stage.stageHeight / 2) {
+        if (this.y <= this.stage.stageHeight * 3 / 5) {
             egret.Tween.get(this).to({ x: 0, y: 0 }, 300, egret.Ease.sineIn);
         }
         this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);

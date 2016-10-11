@@ -151,7 +151,7 @@ var Main = (function (_super) {
         //设置文本的混合样式
         text.textFlow = [
             { text: "我想要见证", style: { "size": 30, "textColor": 0x545454 } },
-            { text: "人类", style: { "textColor": 0x32CD99, "size": 60, "strokeColor": 0x6699cc, "stroke": 2, "fontFamily": "微软雅黑" } },
+            { text: "人类", style: { "textColor": 0x32CD99, "size": 60, "strokeColor": 0x000000, "stroke": 2, "fontFamily": "微软雅黑" } },
             { text: "文明的", style: { "fontFamily": "微软雅黑", "textColor": 0x545454 } },
             { text: "各种", style: { "fontFamily": "楷体", "textColor": 0x545454 } },
             { text: "\n科技", style: { "textColor": 0x8E2323 } },
@@ -162,8 +162,8 @@ var Main = (function (_super) {
             { text: "的", style: { "size": 32, "textColor": 0x545454 } },
             { text: "发", style: { "size": 30, "textColor": 0x545454 } },
             { text: "展\n", style: { "size": 26, "textColor": 0x545454 } },
-            { text: "吸引我的是", style: { "italic": true, "textColor": 0xff2400 } },
-            { text: "未知的未来！", style: { "fontFamily": "微软雅黑", "textColor": 0x545454 } },
+            { text: "吸引我的是   ", style: { "italic": true, "textColor": 0xff2400 } },
+            { text: "未知的未来！", style: { "size": 32, "fontFamily": "微软雅黑", "textColor": 0x545454 } },
         ];
         /*** 本示例关键代码段结束 ***/
         text.x = 320 - text.textWidth / 2;
@@ -438,13 +438,13 @@ var Page = (function (_super) {
     p.mouseMove = function (evt) {
         if (this._touchStatus) {
             this.y = evt.stageY - this._distance.y;
-            if (this.y < -this.stage.stageHeight / 2) {
+            if (this.y < -this.stage.stageHeight * 3 / 5) {
                 egret.Tween.get(this).to({ x: 0, y: -1136 }, 350, egret.Ease.sineIn)
                     .wait(300).to({ x: 0, y: 0 }, 100, egret.Ease.sineIn);
                 this.parent.addChildAt(this, 0);
                 this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
             }
-            if (this.y > this.stage.stageHeight / 2) {
+            if (this.y > this.stage.stageHeight * 3 / 5) {
                 egret.Tween.get(this).to({ x: 0, y: -1136 }, 350, egret.Ease.sineIn)
                     .wait(300).to({ x: 0, y: 0 }, 100, egret.Ease.sineIn);
                 this.parent.addChildAt(this, 0);
@@ -454,10 +454,10 @@ var Page = (function (_super) {
     };
     p.mouseUp = function (evt) {
         this._touchStatus = false;
-        if (this.y >= -this.stage.stageHeight / 2) {
+        if (this.y >= -this.stage.stageHeight * 3 / 5) {
             egret.Tween.get(this).to({ x: 0, y: 0 }, 300, egret.Ease.sineIn);
         }
-        if (this.y <= this.stage.stageHeight / 2) {
+        if (this.y <= this.stage.stageHeight * 3 / 5) {
             egret.Tween.get(this).to({ x: 0, y: 0 }, 300, egret.Ease.sineIn);
         }
         this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.mouseMove, this);
