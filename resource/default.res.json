@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,bz_jpg,egret_icon_png,description_json,end_jpg,cloud_jpg,just_jpg,light_jpg,tou_jpeg,normalmusic_svg",
+			"keys": "bg_jpg,bz_jpg,egret_icon_png,description_json,end_jpg,cloud_jpg,just_jpg,light_jpg,tou_jpeg,normalmusic_svg,music_mp3",
 			"name": "preload"
 		}
 	],
@@ -55,6 +55,11 @@
 			"name": "normalmusic_svg",
 			"type": "image",
 			"url": "assets/normalmusic.svg"
+		},
+		{
+			"name": "music_mp3",
+			"type": "sound",
+			"url": "assets/music.mp3"
 		}
 	]
 }

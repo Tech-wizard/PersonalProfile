@@ -58,7 +58,7 @@ var Main = (function (_super) {
                     _this.Mlab.rotation += Main.STEP_ROT;
                     break;
                 case AnimModes.ANIM_SCALE:
-                    _this.Mlab.scaleX = _this.Mlab.scaleY = 0.8 + 0.5 * Math.abs(Math.sin(_this._nScaleBase += Main.STEP_SCALE));
+                    _this.Mlab.scaleX = _this.Mlab.scaleY = 0.8 + 0.2 * Math.abs(Math.sin(_this._nScaleBase += Main.STEP_SCALE));
                     break;
             }
             /*** 本示例关键代码段结束 ***/
@@ -138,7 +138,7 @@ var Main = (function (_super) {
         // sky_1.width = stageW;
         // sky_1.height = stageH;
         var Blackgound = new egret.Shape();
-        Blackgound.graphics.beginFill(0x6B8E23, 0.9);
+        Blackgound.graphics.beginFill(0x90EE90, 0.7);
         Blackgound.graphics.drawRect(0, 0, stageW, stageH);
         Blackgound.graphics.endFill();
         Page_1.addChild(Blackgound);
@@ -221,6 +221,13 @@ var Main = (function (_super) {
         this.Mlab.anchorOffsetY = this.Mlab.height / 2;
         this.Mlab.x = this.stage.stageWidth * 11 / 12;
         this.Mlab.y = this.stage.stageHeight * 0.24;
+        var music = RES.getRes("music_mp3");
+        var musicChannel;
+        var stop_time = 0;
+        musicChannel = music.play(stop_time, 0); //定义音乐
+        var Anim_point = AnimModes.Anim_0; //定义按钮模式
+        this.Mlab.touchEnabled = true;
+        this.Mlab.addEventListener(egret.TouchEvent.TOUCH_TAP, changeAnim, this);
         /// 提示信息
         this._txInfo = new egret.TextField;
         this.addChild(this._txInfo);
@@ -246,6 +253,37 @@ var Main = (function (_super) {
         //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。
         // Get asynchronously a json configuration file according to name keyword. As for the property of name please refer to the configuration file of resources/resource.json.
         RES.getResAsync("description_json", this.startAnimation, this);
+        function changescale(icon, sX, sY) {
+            var n = 0;
+            icon.anchorOffsetX = icon.width / 2;
+            icon.anchorOffsetY = icon.height / 2; //改变锚点位置
+            icon.addEventListener(egret.Event.ENTER_FRAME, function (evt) {
+                icon.scaleX = icon.scaleY = 0.5 * sX + 0.5 * sY * Math.abs(Math.sin(n += Main.STEP_SCALE));
+            }, this); /// 仅缩放，缩放范围
+        } //自身放大缩小
+        function changeAnim(e) {
+            Anim_point = (Anim_point + 1) % 2;
+            switch (Anim_point) {
+                case AnimModes.Anim_0:
+                    musicChannel = music.play(stop_time, 0);
+                    break;
+                case AnimModes.Anim_1:
+                    stop_time = musicChannel.position;
+                    musicChannel.stop();
+                    musicChannel = null;
+                    break;
+            }
+        } //改变音乐播放模式
+        function if_playmusic(e) {
+            switch (Anim_point) {
+                case AnimModes.Anim_0:
+                    music.play();
+                    break;
+                case AnimModes.Anim_1:
+                    music.close();
+                    break;
+            }
+        }
         function pagemove(p) {
             p.addEventListener(egret.TouchEvent.TOUCH_BEGIN, p.mouseDown, p);
             p.addEventListener(egret.TouchEvent.TOUCH_END, p.mouseUp, p);
@@ -351,6 +389,8 @@ var AnimModes = (function () {
     var d = __define,c=AnimModes,p=c.prototype;
     AnimModes.ANIM_ROT = 0;
     AnimModes.ANIM_SCALE = 1;
+    AnimModes.Anim_0 = 0;
+    AnimModes.Anim_1 = 1;
     return AnimModes;
 }());
 egret.registerClass(AnimModes,'AnimModes');

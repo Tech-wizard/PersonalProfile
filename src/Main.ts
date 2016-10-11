@@ -34,6 +34,9 @@ class Main extends egret.DisplayObjectContainer {
     private static STEP_ROT: number = 3;
     private static STEP_SCALE: number = .03;
 
+    private _sound: egret.Sound;
+    private _channel: egret.SoundChannel;
+
     public constructor() {
         super();
         this.once(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
@@ -80,7 +83,7 @@ class Main extends egret.DisplayObjectContainer {
                     this.Mlab.rotation += Main.STEP_ROT;
                     break;
                 case AnimModes.ANIM_SCALE:        /// 仅缩放，缩放范围 0.5~1
-                    this.Mlab.scaleX = this.Mlab.scaleY = 0.8 + 0.5 * Math.abs(Math.sin(this._nScaleBase += Main.STEP_SCALE));
+                    this.Mlab.scaleX = this.Mlab.scaleY = 0.8 + 0.2 * Math.abs(Math.sin(this._nScaleBase += Main.STEP_SCALE));
                     break;
             }
             /*** 本示例关键代码段结束 ***/
@@ -176,6 +179,7 @@ class Main extends egret.DisplayObjectContainer {
         var stageH: number = this.stage.stageHeight;
 
 
+
         var Page_1: Page = new Page();
         this.addChild(Page_1);
         Page_1.touchEnabled = true;
@@ -186,11 +190,11 @@ class Main extends egret.DisplayObjectContainer {
         // sky_1.width = stageW;
         // sky_1.height = stageH;
 
-         var Blackgound = new egret.Shape();
-        Blackgound.graphics.beginFill(0x6B8E23, 0.9);
+        var Blackgound = new egret.Shape();
+        Blackgound.graphics.beginFill(0x90EE90, 0.7);
         Blackgound.graphics.drawRect(0, 0, stageW, stageH);
         Blackgound.graphics.endFill();
-         Page_1.addChild(Blackgound);
+        Page_1.addChild(Blackgound);
 
         var text: egret.TextField = new egret.TextField();
         text.textColor = 0xffffff;
@@ -203,9 +207,9 @@ class Main extends egret.DisplayObjectContainer {
         //设置文本的混合样式
         text.textFlow = <Array<egret.ITextElement>>[
             { text: "我想要见证", style: { "size": 30 } },
-            { text: "人类", style: { "textColor": 0x32CD99, "size": 60, "strokeColor": 0x6699cc, "stroke": 2 ,"fontFamily": "微软雅黑"} },
+            { text: "人类", style: { "textColor": 0x32CD99, "size": 60, "strokeColor": 0x6699cc, "stroke": 2, "fontFamily": "微软雅黑" } },
             { text: "文明的", style: { "fontFamily": "微软雅黑" } },
-            { text: "各种", style: { "fontFamily": "楷体"}},
+            { text: "各种", style: { "fontFamily": "楷体" } },
             { text: "\n科技", style: { "textColor": 0x70DBDB } },
             { text: "\n社会", style: { "textColor": 0x70DBDB } },
             { text: "\n文化", style: { "textColor": 0x70DBDB } },
@@ -216,7 +220,7 @@ class Main extends egret.DisplayObjectContainer {
             { text: "展\n", style: { "size": 26 } },
             { text: "吸引我的是", style: { "italic": true, "textColor": 0xff2400 } },
             { text: "未知的未来！", style: { "fontFamily": "微软雅黑" } },//楷体
-           
+
         ];
         /*** 本示例关键代码段结束 ***/
 
@@ -247,7 +251,7 @@ class Main extends egret.DisplayObjectContainer {
         sky_3.width = stageW;
         sky_3.height = stageH;
 
-      
+
 
         var topMask = new egret.Shape();
         topMask.graphics.beginFill(0x000000, 0.15);
@@ -295,6 +299,16 @@ class Main extends egret.DisplayObjectContainer {
         this.Mlab.x = this.stage.stageWidth * 11 / 12;
         this.Mlab.y = this.stage.stageHeight * 0.24;
 
+        var music: egret.Sound = RES.getRes("music_mp3");
+        var musicChannel: egret.SoundChannel;
+        var stop_time: number = 0;
+        musicChannel = music.play(stop_time, 0);//定义音乐
+        var Anim_point = AnimModes.Anim_0;//定义按钮模式
+
+        this.Mlab.touchEnabled = true;
+        this.Mlab.addEventListener(egret.TouchEvent.TOUCH_TAP, changeAnim, this);
+
+
         /// 提示信息
         this._txInfo = new egret.TextField;
         this.addChild(this._txInfo);
@@ -326,6 +340,40 @@ class Main extends egret.DisplayObjectContainer {
         // Get asynchronously a json configuration file according to name keyword. As for the property of name please refer to the configuration file of resources/resource.json.
         RES.getResAsync("description_json", this.startAnimation, this)
 
+
+        function changescale(icon: egret.Bitmap, sX: number, sY: number): void {
+            var n = 0;
+            icon.anchorOffsetX = icon.width / 2;
+            icon.anchorOffsetY = icon.height / 2;//改变锚点位置
+            icon.addEventListener(egret.Event.ENTER_FRAME, (evt: egret.Event) => {
+                icon.scaleX = icon.scaleY = 0.5 * sX + 0.5 * sY * Math.abs(Math.sin(n += Main.STEP_SCALE));
+            }, this);             /// 仅缩放，缩放范围
+        }//自身放大缩小
+
+        function changeAnim(e: egret.TouchEvent): void {
+            Anim_point = (Anim_point + 1) % 2;
+            switch (Anim_point) {
+                case AnimModes.Anim_0:
+                    musicChannel = music.play(stop_time, 0);
+                    break;
+                case AnimModes.Anim_1:
+                    stop_time = musicChannel.position;
+                    musicChannel.stop();
+                    musicChannel = null;
+                    break;
+            }
+        }//改变音乐播放模式
+
+
+        function if_playmusic(e: egret.TouchEvent): void {
+            switch (Anim_point) {
+                case AnimModes.Anim_0: music.play();
+                    break;
+                case AnimModes.Anim_1: music.close();
+                    break;
+            }
+        }
+
         function pagemove(p: Page): void {
             p.addEventListener(egret.TouchEvent.TOUCH_BEGIN, p.mouseDown, p);
             p.addEventListener(egret.TouchEvent.TOUCH_END, p.mouseUp, p);
@@ -342,6 +390,9 @@ class Main extends egret.DisplayObjectContainer {
         result.texture = texture;
         return result;
     }
+
+
+
 
     /**
      * 描述文件加载成功，开始播放动画
@@ -428,8 +479,10 @@ class Page extends egret.DisplayObjectContainer {   //实现翻页用的page类
 
 }
 
-class AnimModes {
+class AnimModes {   //按钮模式
     public static ANIM_ROT: number = 0;
     public static ANIM_SCALE: number = 1;
+    public static Anim_0: number = 0;
+    public static Anim_1: number = 1;
 }
 
