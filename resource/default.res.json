@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,bz_jpg,egret_icon_png,description_json,end_jpg,cloud_jpg,just_jpg,light_jpg,tou_jpeg,normalmusic_svg,music_mp3",
+			"keys": "bg_jpg,bz_jpg,egret_icon_png,description_json,end_jpg,cloud_jpg,just_jpg,light_jpg,tou_jpeg,normalmusic_svg,music_mp3,rl_png,zh_jpg,eu_jpg,dc2_jpg",
 			"name": "preload"
 		}
 	],
@@ -60,6 +60,26 @@
 			"name": "music_mp3",
 			"type": "sound",
 			"url": "assets/music.mp3"
+		},
+		{
+			"name": "rl_png",
+			"type": "image",
+			"url": "assets/rl.png"
+		},
+		{
+			"name": "zh_jpg",
+			"type": "image",
+			"url": "assets/zh.jpg"
+		},
+		{
+			"name": "eu_jpg",
+			"type": "image",
+			"url": "assets/eu.jpg"
+		},
+		{
+			"name": "dc2_jpg",
+			"type": "image",
+			"url": "assets/dc2.jpg"
 		}
 	]
 }

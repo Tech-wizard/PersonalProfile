@@ -138,7 +138,7 @@ var Main = (function (_super) {
         // sky_1.width = stageW;
         // sky_1.height = stageH;
         var Blackgound = new egret.Shape();
-        Blackgound.graphics.beginFill(0x90EE90, 0.7);
+        Blackgound.graphics.beginFill(0x90EE90, 0.2);
         Blackgound.graphics.drawRect(0, 0, stageW, stageH);
         Blackgound.graphics.endFill();
         Page_1.addChild(Blackgound);
@@ -150,24 +150,24 @@ var Main = (function (_super) {
         text.bold = false;
         //设置文本的混合样式
         text.textFlow = [
-            { text: "我想要见证", style: { "size": 30 } },
+            { text: "我想要见证", style: { "size": 30, "textColor": 0x545454 } },
             { text: "人类", style: { "textColor": 0x32CD99, "size": 60, "strokeColor": 0x6699cc, "stroke": 2, "fontFamily": "微软雅黑" } },
-            { text: "文明的", style: { "fontFamily": "微软雅黑" } },
-            { text: "各种", style: { "fontFamily": "楷体" } },
-            { text: "\n科技", style: { "textColor": 0x70DBDB } },
-            { text: "\n社会", style: { "textColor": 0x70DBDB } },
-            { text: "\n文化", style: { "textColor": 0x70DBDB } },
-            { text: "\n信仰", style: { "textColor": 0x70DBDB } },
+            { text: "文明的", style: { "fontFamily": "微软雅黑", "textColor": 0x545454 } },
+            { text: "各种", style: { "fontFamily": "楷体", "textColor": 0x545454 } },
+            { text: "\n科技", style: { "textColor": 0x8E2323 } },
+            { text: "\n社会", style: { "textColor": 0x8E2323 } },
+            { text: "\n文化", style: { "textColor": 0x8E2323 } },
+            { text: "\n信仰", style: { "textColor": 0x8E2323 } },
             { text: "\n" },
-            { text: "的", style: { "size": 32 } },
-            { text: "发", style: { "size": 30 } },
-            { text: "展\n", style: { "size": 26 } },
+            { text: "的", style: { "size": 32, "textColor": 0x545454 } },
+            { text: "发", style: { "size": 30, "textColor": 0x545454 } },
+            { text: "展\n", style: { "size": 26, "textColor": 0x545454 } },
             { text: "吸引我的是", style: { "italic": true, "textColor": 0xff2400 } },
-            { text: "未知的未来！", style: { "fontFamily": "微软雅黑" } },
+            { text: "未知的未来！", style: { "fontFamily": "微软雅黑", "textColor": 0x545454 } },
         ];
         /*** 本示例关键代码段结束 ***/
         text.x = 320 - text.textWidth / 2;
-        text.y = 600 - text.textHeight / 2;
+        text.y = 550 - text.textHeight / 2;
         Page_1.addChild(text);
         var Page_2 = new Page();
         this.addChild(Page_2);
@@ -177,6 +177,66 @@ var Main = (function (_super) {
         Page_2.addChild(sky_2);
         sky_2.width = stageW;
         sky_2.height = stageH;
+        var text_3 = new egret.TextField();
+        text_3.textColor = 0xffffff;
+        text_3.width = stageW - 172;
+        text_3.textAlign = "center";
+        text_3.text = "想制作成HTML5游戏的类型";
+        text_3.size = 26;
+        text_3.anchorOffsetX = text_3.width / 2;
+        text_3.anchorOffsetY = text_3.height / 2;
+        text_3.x = stageW / 2;
+        text_3.y = 1060;
+        Page_2.addChild(text_3);
+        var dc2 = this.createBitmapByName("dc2_jpg");
+        Page_2.addChild(dc2);
+        dc2.scaleX = 1;
+        dc2.scaleY = 1;
+        dc2.anchorOffsetX = dc2.width / 2;
+        dc2.anchorOffsetY = dc2.height / 2;
+        dc2.x = this.stage.stageWidth / 2;
+        dc2.y = 670;
+        dc2.alpha = 1;
+        var eu = this.createBitmapByName("eu_jpg");
+        Page_2.addChild(eu);
+        eu.scaleX = dc2.width / eu.width;
+        eu.scaleY = dc2.width / eu.width;
+        eu.anchorOffsetX = eu.width / 2;
+        eu.anchorOffsetY = eu.height / 2;
+        eu.x = this.stage.stageWidth / 2;
+        eu.y = this.stage.stageHeight * 5 / 6 - 50;
+        eu.alpha = 0;
+        var rl = this.createBitmapByName("rl_png");
+        Page_2.addChild(rl);
+        rl.scaleX = dc2.width / rl.width;
+        rl.scaleY = dc2.width / rl.width;
+        rl.anchorOffsetX = rl.width / 2;
+        rl.anchorOffsetY = rl.height / 2;
+        rl.x = this.stage.stageWidth / 2;
+        rl.y = this.stage.stageHeight * 5 / 6 - 50;
+        rl.alpha = 0;
+        var changedc2 = function () {
+            var dc2tw = egret.Tween.get(dc2);
+            dc2tw.to({ "alpha": 1 }, 500);
+            dc2tw.wait(3000);
+            dc2tw.to({ "alpha": 0 }, 500);
+            dc2tw.call(changeeu, self);
+        };
+        var changeeu = function () {
+            var eutw = egret.Tween.get(eu);
+            eutw.to({ "alpha": 1 }, 500);
+            eutw.wait(3000);
+            eutw.to({ "alpha": 0 }, 500);
+            eutw.call(changerl, self);
+        };
+        var changerl = function () {
+            var rltw = egret.Tween.get(rl);
+            rltw.to({ "alpha": 1 }, 500);
+            rltw.wait(3000);
+            rltw.to({ "alpha": 0 }, 500);
+            rltw.call(changedc2, self);
+        };
+        changedc2(); //图片循环
         var Page_3 = new Page();
         this.addChild(Page_3);
         Page_3.touchEnabled = true;
@@ -185,6 +245,19 @@ var Main = (function (_super) {
         Page_3.addChild(sky_3);
         sky_3.width = stageW;
         sky_3.height = stageH;
+        var text_2 = new egret.TextField();
+        text_2.textColor = 0xffffff;
+        text_2.width = 540;
+        text_2.size = 30;
+        text_2.lineSpacing = 25;
+        text_2.bold = false;
+        text_2.textFlow = [
+            { text: "在不远的未来想要从事\n", style: { "size": 30, "fontFamily": "微软雅黑", "textColor": 0x000000 } },
+            { text: "         不会被AI替代的工作！", style: { "size": 32, "fontFamily": "微软雅黑", "textColor": 0x000000 } },
+        ];
+        text_2.x = 380 - text.textWidth / 2;
+        text_2.y = 1160 - text.textHeight / 2;
+        Page_3.addChild(text_2);
         var topMask = new egret.Shape();
         topMask.graphics.beginFill(0x000000, 0.15);
         topMask.graphics.drawRect(0, 0, stageW, 172);
